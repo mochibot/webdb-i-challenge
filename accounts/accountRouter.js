@@ -6,7 +6,19 @@ const router = express.Router();
 
 //get all accounts
 router.get('/', (req, res) => {
-  db('accounts')
+  let { limit, sortby, sortdir } = req.query;
+  let query = db('accounts');
+  if (limit) {
+    query.limit(limit);
+  }
+  if (sortby) {
+    if (sortdir) {
+      query.orderBy(sortby, sortdir);
+    } else {
+      query.orderBy(sortby)
+    }
+  }
+  query
     .then(response => {
       res.status(200).json(response);
     })
